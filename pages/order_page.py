@@ -49,9 +49,9 @@ class OrderPage(BasePage):
         
         color_locator = OrderPageLocators.color_checkbox(data["color"])
         self.find_element(color_locator).click()
-        
-        if data["comment"]:
-            self.find_element(OrderPageLocators.COMMENT_INPUT).send_keys(data["comment"])
+
+        comment_field = self.find_element(OrderPageLocators.COMMENT_INPUT)
+        comment_field.send_keys(data["comment"])
     
     @allure.step("Нажать кнопку 'Заказать'")
     def click_order_button(self):
@@ -61,7 +61,10 @@ class OrderPage(BasePage):
     def confirm_order(self):
         self.find_element(OrderPageLocators.CONFIRM_YES_BUTTON).click()
     
-    @allure.step("Проверить успешное оформление заказа")
-    def check_success_message(self):
-        success_element = self.find_element(OrderPageLocators.SUCCESS_MESSAGE)
-        return success_element.text
+    @allure.step("Проверить наличие сообщения об успешном оформлении")
+    def is_success_message_displayed(self):
+        """Возвращает True, если сообщение об успехе отображается."""
+        try:
+            return self.is_visible(OrderPageLocators.SUCCESS_MESSAGE)
+        except:
+            return False

@@ -2,6 +2,8 @@ import allure
 from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
 from locators.main_page_locators import MainPageLocators
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class MainPage(BasePage):
@@ -9,7 +11,7 @@ class MainPage(BasePage):
         super().__init__(driver)
     
     def go_to_faq_section(self):
-        faq_section = (By.CLASS_NAME, "Home_FAQ__3uVm4")
+        faq_section = (By.CSS_SELECTOR, "[class*='Home_FAQ']")
         self.scroll_to(faq_section)
     
     def click_faq_question(self, question_number):
@@ -17,7 +19,8 @@ class MainPage(BasePage):
         
         self.scroll_to(question_locator)
 
-        self.click(question_locator)
+        element = self.find_element(question_locator)
+        self.driver.execute_script("arguments[0].click();", element)
     
     def get_faq_answer(self, question_number):
         answer_locator = (By.ID, f"accordion__panel-{question_number}")
@@ -40,10 +43,28 @@ class MainPage(BasePage):
     def click_scooter_logo(self):
         self.click(MainPageLocators.SCOOTER_LOGO)
     
-    @allure.step("Нажать на логотип Яндекс")
-    def click_yandex_logo(self):
+    @allure.step("Нажать на логотип Яндекс и переключиться на новую вкладку")
+    def click_yandex_logo_and_switch(self):
         self.click(MainPageLocators.YANDEX_LOGO)
+
+        WebDriverWait(self.driver, 10).until(EC.number_of_windows_to_be(2))
+
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+
+        WebDriverWait(self.driver, 15).until(
+            lambda d: d.current_url != 'about:blank'
+        )
     
-    def is_element_visible(self, locator):
-        return super().is_visible(locator)
+        return self
     
+    @allure.step("Получить текущий URL")
+    def get_current_url(self):
+        return self.driver.current_url
+    
+    @allure.step("Проверить видимость логотипа Самоката")
+    def is_scooter_logo_visible(self):
+        return self.is_visible(MainPageLocators.SCOOTER_LOGO)
+    
+    @allure.step("Проверить видимость логотипа Яндекс")
+    def is_yandex_logo_visible(self):
+        return self.is_visible(MainPageLocators.YANDEX_LOGO)

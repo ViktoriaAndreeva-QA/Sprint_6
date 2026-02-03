@@ -18,5 +18,5 @@ class MainPageLocators:
     TOP_ORDER_BUTTON = (By.XPATH, "//button[contains(@class, 'Button_Button__ra12g')]")
     BOTTOM_ORDER_BUTTON = (By.XPATH, "//button[contains(@class, 'Button_Middle__1CSJM')]")
 
-    SCOOTER_LOGO = (By.CLASS_NAME, "Header_LogoScooter__3lsAR")
-    YANDEX_LOGO = (By.CLASS_NAME, "Header_LogoYandex__3TSOI")
+    SCOOTER_LOGO = (By.XPATH, "//*[contains(@class, 'Header_LogoScooter')]")
+    YANDEX_LOGO = (By.XPATH, "//*[contains(@class, 'Header_LogoYandex')]")
