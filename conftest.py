@@ -1,12 +1,12 @@
 import pytest
 from selenium import webdriver
-from constants import MAIN_PAGE_URL
+from constants import BASE_URL
 
 
 @pytest.fixture(scope="function")
 def driver():
     driver = webdriver.Firefox()
-    driver.get(MAIN_PAGE_URL)
+    driver.get(BASE_URL)
     
     yield driver
 
@@ -22,11 +22,3 @@ def order_page(driver):
     """Фикстура для создания экземпляра OrderPage."""
     from pages.order_page import OrderPage
     return OrderPage(driver)
-
-@pytest.fixture(autouse=True)
-def cleanup_between_tests(driver):
-    yield
-    try:
-        driver.get(MAIN_PAGE_URL)
-    except:
-        pass

@@ -1,4 +1,4 @@
-TOP_BUTTON_TEST_CASES = [
+ORDER_TEST_CASES_FOR_TOP_BUTTON = [
     {
         "name": "Николай",
         "last_name": "Дмитриев",
@@ -23,7 +23,7 @@ TOP_BUTTON_TEST_CASES = [
     }
 ]
 
-BOTTOM_BUTTON_TEST_CASES = [
+ORDER_TEST_CASES_FOR_BOTTOM_BUTTON = [
     {
         "name": "Мария",
         "last_name": "Петрова",

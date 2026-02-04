@@ -2,8 +2,6 @@ import allure
 from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
 from locators.main_page_locators import MainPageLocators
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 
 class MainPage(BasePage):
@@ -12,15 +10,15 @@ class MainPage(BasePage):
     
     def go_to_faq_section(self):
         faq_section = (By.CSS_SELECTOR, "[class*='Home_FAQ']")
-        self.scroll_to(faq_section)
+        self.scroll_to_element(faq_section)
     
     def click_faq_question(self, question_number):
         question_locator = (By.ID, f"accordion__heading-{question_number}")
         
-        self.scroll_to(question_locator)
+        self.scroll_to_element(question_locator)
 
         element = self.find_element(question_locator)
-        self.driver.execute_script("arguments[0].click();", element)
+        self.execute_script("arguments[0].click();", element)
     
     def get_faq_answer(self, question_number):
         answer_locator = (By.ID, f"accordion__panel-{question_number}")
@@ -29,14 +27,13 @@ class MainPage(BasePage):
             return self.get_text(answer_locator)
         return ""
 
-
     @allure.step("Кликнуть на верхнюю кнопку 'Заказать'")
     def click_top_order_button(self):
         self.click(MainPageLocators.TOP_ORDER_BUTTON)
     
     @allure.step("Кликнуть на нижнюю кнопку 'Заказать'")
     def click_bottom_order_button(self):
-        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        self.scroll_to_bottom()
         self.click(MainPageLocators.BOTTOM_ORDER_BUTTON)
 
     @allure.step("Нажать на логотип Самоката")
@@ -47,19 +44,11 @@ class MainPage(BasePage):
     def click_yandex_logo_and_switch(self):
         self.click(MainPageLocators.YANDEX_LOGO)
 
-        WebDriverWait(self.driver, 10).until(EC.number_of_windows_to_be(2))
+        self.wait_for_new_window()
 
-        self.driver.switch_to.window(self.driver.window_handles[-1])
+        self.switch_to_last_window()
 
-        WebDriverWait(self.driver, 15).until(
-            lambda d: d.current_url != 'about:blank'
-        )
-    
-        return self
-    
-    @allure.step("Получить текущий URL")
-    def get_current_url(self):
-        return self.driver.current_url
+        self.wait_for_url_contains('dzen.ru', timeout=15)
     
     @allure.step("Проверить видимость логотипа Самоката")
     def is_scooter_logo_visible(self):

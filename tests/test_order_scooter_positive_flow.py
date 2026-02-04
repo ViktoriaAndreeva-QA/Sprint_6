@@ -3,15 +3,15 @@ import allure
 from pages.main_page import MainPage
 from pages.order_page import OrderPage
 from locators.main_page_locators import MainPageLocators
-from data.order_test_data import TOP_BUTTON_TEST_CASES, BOTTOM_BUTTON_TEST_CASES
-from constants import MAIN_PAGE_URL
+from data.order_test_data import ORDER_TEST_CASES_FOR_TOP_BUTTON, ORDER_TEST_CASES_FOR_BOTTOM_BUTTON
+from constants import BASE_URL
 
 
 @allure.feature("Заказ самоката")
 @allure.story("Позитивный сценарий оформления заказа")
 class TestOrderFlow:
     
-    @pytest.mark.parametrize("order_data", TOP_BUTTON_TEST_CASES)
+    @pytest.mark.parametrize("order_data", ORDER_TEST_CASES_FOR_TOP_BUTTON)
     @allure.title("Заказ через верхнюю кнопку")
     def test_order_from_top_button(self, driver, order_data):
         main_page = MainPage(driver)
@@ -26,7 +26,7 @@ class TestOrderFlow:
             assert order_page.is_success_message_displayed(), \
                 "Сообщение об успешном оформлении заказа не отображается"
     
-    @pytest.mark.parametrize("order_data", BOTTOM_BUTTON_TEST_CASES)
+    @pytest.mark.parametrize("order_data", ORDER_TEST_CASES_FOR_BOTTOM_BUTTON)
     @allure.title("Заказ через нижнюю кнопку")
     def test_order_from_bottom_button(self, driver, order_data):
         main_page = MainPage(driver)
@@ -53,7 +53,7 @@ class TestLogoRedirects:
         main_page.click_scooter_logo()
         
         current_url = main_page.get_current_url()
-        assert current_url == MAIN_PAGE_URL, \
+        assert current_url == BASE_URL, \
             f"Логотип Самоката должен вести на главную, но ведет на: {current_url}"
     
     @allure.title("Логотип Яндекса открывает новую вкладку с Яндексом")
@@ -66,7 +66,6 @@ class TestLogoRedirects:
         
         assert 'dzen.ru' in current_url, \
             f"Ожидался Яндекс.Дзен, но открылось: {current_url}"
-
 
 @allure.feature("Проверка элементов главной страницы")
 class TestMainPageElements:
